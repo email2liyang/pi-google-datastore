@@ -15,10 +15,21 @@ import static org.testng.Assert.assertEquals;
 public class KeyTest {
 
   @Test
-  public void testFromSafeUrl() throws Exception {
+  public void testFromSafeUrl_invalid() throws Exception {
     Key
         googleKey =
         Key.fromUrlSafe(
+            "partition_id+%7B%0A++dataset_id%3A+%22datastore-test-1123%22%0A%7D%0Apath_element+%7B%0A++kind%3A+%22ip_pending_msg%22%0A++id%3A+5629499534213120%0A%7D%0A");
+    assertEquals(googleKey.id(), new Long("5629499534213120"));
+    assertEquals(googleKey.kind(), "ip_pending_msg");
+
+  }
+
+  @Test
+  public void testFromSafeUrl_valid() throws Exception {
+    Key
+        googleKey =
+        DataStoreUtils.fromV1Beta2UrlSafe(
             "partition_id+%7B%0A++dataset_id%3A+%22datastore-test-1123%22%0A%7D%0Apath_element+%7B%0A++kind%3A+%22ip_pending_msg%22%0A++id%3A+5629499534213120%0A%7D%0A");
     assertEquals(googleKey.id(), new Long("5629499534213120"));
     assertEquals(googleKey.kind(), "ip_pending_msg");
